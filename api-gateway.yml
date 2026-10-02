@@ -1,0 +1,192 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - PreserveHostHeader
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**,/api/v1/cars/**,/api/v1/addresses/**,/api/v1/corporate/**
+        - id: service-catalog-service
+          uri: lb://service-catalog-service
+          predicates:
+            - Path=/api/v1/packages/**,/api/v1/addons/**,/api/v1/promos/**
+        - id: booking-service
+          uri: lb://booking-service
+          predicates:
+            - Path=/api/v1/bookings/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/payments/**,/api/v1/webhooks/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+        - id: review-service
+          uri: lb://review-service
+          predicates:
+            - Path=/api/v1/reviews/**,/api/v1/leaderboard/**
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/api/v1/admin/**
+        - id: support-service
+          uri: lb://support-service
+          predicates:
+            - Path=/api/v1/support/**
+        - id: vehicle-service
+          uri: lb://vehicle-service
+          predicates:
+            - Path=/api/v1/vehicles/**
+        - id: washer-assignment-service
+          uri: lb://washer-assignment-service
+          predicates:
+            - Path=/api/v1/assignments/**
+        - id: media-verification-service
+          uri: lb://media-verification-service
+          predicates:
+            - Path=/api/v1/verifications/**
+        - id: organization-service
+          uri: lb://organization-service
+          predicates:
+            - Path=/api/v1/organizations/**,/api/v1/corporate/**
+        - id: sustainability-service
+          uri: lb://sustainability-service
+          predicates:
+            - Path=/api/v1/sustainability/**
+        - id: auth-docs
+          uri: lb://auth-service
+          predicates:
+            - Path=/v3/api-docs/auth-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: user-docs
+          uri: lb://user-service
+          predicates:
+            - Path=/v3/api-docs/user-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: catalog-docs
+          uri: lb://service-catalog-service
+          predicates:
+            - Path=/v3/api-docs/service-catalog-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: booking-docs
+          uri: lb://booking-service
+          predicates:
+            - Path=/v3/api-docs/booking-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: payment-docs
+          uri: lb://payment-service
+          predicates:
+            - Path=/v3/api-docs/payment-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: vehicle-docs
+          uri: lb://vehicle-service
+          predicates:
+            - Path=/v3/api-docs/vehicle-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: assignment-docs
+          uri: lb://washer-assignment-service
+          predicates:
+            - Path=/v3/api-docs/washer-assignment-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: verification-docs
+          uri: lb://media-verification-service
+          predicates:
+            - Path=/v3/api-docs/media-verification-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: organization-docs
+          uri: lb://organization-service
+          predicates:
+            - Path=/v3/api-docs/organization-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: sustainability-docs
+          uri: lb://sustainability-service
+          predicates:
+            - Path=/v3/api-docs/sustainability-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: support-docs
+          uri: lb://support-service
+          predicates:
+            - Path=/v3/api-docs/support-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: notification-docs
+          uri: lb://notification-service
+          predicates:
+            - Path=/v3/api-docs/notification-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: review-docs
+          uri: lb://review-service
+          predicates:
+            - Path=/v3/api-docs/review-service
+          filters:
+            - SetPath=/v3/api-docs
+        - id: admin-docs
+          uri: lb://admin-service
+          predicates:
+            - Path=/v3/api-docs/admin-service
+          filters:
+            - SetPath=/v3/api-docs
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: 01. Authentication Service
+        url: /v3/api-docs/auth-service
+      - name: 02. User Management Service
+        url: /v3/api-docs/user-service
+      - name: 03. Service Catalog Service
+        url: /v3/api-docs/service-catalog-service
+      - name: 04. Booking & Dynamic Pricing Service
+        url: /v3/api-docs/booking-service
+      - name: 05. Payment & Escrow Service
+        url: /v3/api-docs/payment-service
+      - name: 06. Vehicle Service
+        url: /v3/api-docs/vehicle-service
+      - name: 07. Washer Assignment & Dispatch
+        url: /v3/api-docs/washer-assignment-service
+      - name: 08. Media & Verification Service
+        url: /v3/api-docs/media-verification-service
+      - name: 09. Organization B2B Fleet Service
+        url: /v3/api-docs/organization-service
+      - name: 10. Sustainability & Eco Leaderboard
+        url: /v3/api-docs/sustainability-service
+      - name: 11. Support Service
+        url: /v3/api-docs/support-service
+      - name: 12. Notification Service
+        url: /v3/api-docs/notification-service
+      - name: 13. Review & Ratings Service
+        url: /v3/api-docs/review-service
+      - name: 14. Admin Service
+        url: /v3/api-docs/admin-service
+

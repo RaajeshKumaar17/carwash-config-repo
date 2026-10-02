@@ -1,0 +1,40 @@
+server:
+  port: 8091
+spring:
+  datasource:
+    url: jdbc:h2:mem:assignmentdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+assignment:
+  default-radius-km: 15.0
+  auto-dispatch:
+    max-candidates: 5
+    response-timeout-minutes: 5
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:mysql://mysql-assignment:3306/assignment_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Raajesh
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+  rabbitmq:
+    host: rabbitmq
+  data:
+    redis:
+      host: redis

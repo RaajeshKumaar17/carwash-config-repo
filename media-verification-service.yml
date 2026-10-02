@@ -1,0 +1,42 @@
+server:
+  port: 8092
+spring:
+  datasource:
+    url: jdbc:h2:mem:verificationdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+media:
+  upload-dir: /uploads/verification
+  ai-cleanliness-threshold: 75.0
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:mysql://mysql-verification:3306/verification_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Raajesh
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+  rabbitmq:
+    host: rabbitmq
+  data:
+    redis:
+      host: redis

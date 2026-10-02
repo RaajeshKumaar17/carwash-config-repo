@@ -1,0 +1,77 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,circuitbreakers
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.0
+  zipkin:
+    tracing:
+      endpoint: ""
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 3
+          multiplier: 2.0
+  data:
+    redis:
+      host: 
+      port: 6379
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 3s
+  bulkhead:
+    configs:
+      default:
+        max-concurrent-calls: 25
+        max-wait-duration: 500ms
+  ratelimiter:
+    configs:
+      default:
+        limit-for-period: 100
+        limit-refresh-period: 1s
+        timeout-duration: 0s
+
+jwt:
+  public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApbc1henz4RUiBlclz3O6RyxmT8WDDLEgnjd7zrCnxeQC+9eLOxcWUlWfAgTQlnEsZxIDpAxxndQMt1SDz1roiiVlTccz0T2acaTfXbW78hurTfKxYRpHzTVCOadBwu5DeSKOOYFFQpMnewBfXxHXFDufdx++iqxSYRQ+RRl4pHnKsROIOlZuG3GujLFFLW7EKKGm6OAeF+hwnCwy39Z28b8qlViHIOs54tOX4D22CYUZ0zVLWfCPNfv1kSJ0BjOaKdmwPmW5/qwlYCMrKw70KOg9ybab/TXNCucvzUJ5/vi/qEFU8zwtVBb2lBaj7J7oDHA5tU1O5PKFPdsdvIiBOwIDAQAB
+  private-key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCltzWF6fPhFSIGVyXPc7pHLGZPxYMMsSCeN3vOsKfF5AL714s7FxZSVZ8CBNCWcSxnEgOkDHGd1Ay3VIPPWuiKJWVNxzPRPZpxpN9dtbvyG6tN8rFhGkfNNUI5p0HC7kN5Io45gUVCkyd7AF9fEdcUO593H76KrFJhFD5FGXikecqxE4g6Vm4bca6MsUUtbsQooabo4B4X6HCcLDLf1nbxvyqVWIcg6zni05fgPbYJhRnTNUtZ8I81+/WRInQGM5op2bA+Zbn+rCVgIysrDvQo6D3Jtpv9Nc0K5y/NQnn++L+oQVTzPC1UFvaUFqPsnugMcDm1TU7k8oU92x28iIE7AgMBAAECggEAN6Z5dnG1IULgDMIKZAropQsvhp19H2+CVS+rx6MCjI3ARMPDMYJU0CyJu/tS8xqpfymJCHfXVdnGtXBP3XwZeH8LcJ2zdJKcAYsNKeKkba9GDWSxlbrmHu9CQKs/Bc/O3+ivW3dig3N4gDGFVZ9fm59UM4R5EAfDmG9cZAckQRNMR3ToybhMx7ZoB0hRKq/SQrzGZz5Zwh6gdg/LqQA7Ha9FSjt0ZQV1zDZK/fiCKOGXf6UCPr23Cvyp0umXzgdqE+DrxjJBJY7QOR+PppVhHIJS3aIO15x1t1VDmDmwsyZn5awDag7rlgWYNDCpMjVKsJRzTjBb77L5TKItdIVadQKBgQC4mRR09aQRwKnK+t9Vcqgur2B+7BsHmcyS+4dCd3sVyiUSD1mgVQAa8LVWOf9JwtdjOtEMJA5bGBr94jXEkYDhcMcXTaica66x9+SHFWhNhGIXc7uRNSrU4j1RBCrH9jv9zytaXVaa9kR8MYCdIwy6n1epSgscf/WDrSkM+H2U3QKBgQDl0GZo8ntNIli84TuN7cUc8YuKVanaEL3VL7gYHYrCtNNmhtYPgiUelsigRYZb1fIEWgEER9CJi2ziNz7GVxM06bqQzu+p5EAw8wJ0WH+9dbrR/97sH6gJWOspKOmfWu7GEcfXPEZvOLJsf8iaa6xB3WZn68b2KH3zgz5bP4dg9wKBgQChfWHVFBPtZ+Pia+g3Q2/4L3q2bm0TECxUpXDl58qo/EfD7ePVjKbj6pJpFaHM8IQnDgxVl7FrZcIvOtcY2MWr81Jog4qvFNEmZhvpRQQTVG3P4HJFjQKkbCuCFagreLFwz+04R5F9TVYKY/AFB+WZ2c4BjoH788Ff6XuRGk4ajQKBgQCaEFbHXl+Yu0DgBuKk6FRvbeLNL1Z50SViKOZyjEN8+jqKjjQtG2OFGTKQd2t2X3wqvKfX1ckQnH63PLAByVgf7dzbvU7gBxuddRwdIUMpoSZIKA+rHiHJemnUIxBTe2N9N2hQe6EAaPL8V8IE+8/0K9e+LUsptMWTHVYNWA6KywKBgBBZfpVcdntB844AtZU+H0ypxd2fPsD95AnDsOjzAFfvw3I8cXLGLcIdmDcBFFgq9qqu5FQpfyekW0O4qM96Uwbjxew2zyyLaxOHWfDDH4QRbdGsXqp0S4XmnNUdbzz+4Ln7tmkFNSsVw488XEMBwW5hLqGm2XFyXK3zeloyzjRS
+
+logging:
+  pattern:
+    correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "
+  level:
+    com.greencarwash: DEBUG
+

@@ -1,0 +1,35 @@
+server:
+  port: 8093
+spring:
+  datasource:
+    url: jdbc:h2:mem:organizationdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:mysql://mysql-organization:3306/organization_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Raajesh
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+  rabbitmq:
+    host: rabbitmq
+  data:
+    redis:
+      host: redis
